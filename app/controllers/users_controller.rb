@@ -8,10 +8,12 @@ class UsersController < ApplicationController
   end
 
   def new
+    redirect_to(root_url) if signed_in?
     @user = User.new
   end
 
   def create
+    redirect_to(root_url) if signed_in?
     @user = User.new(user_params)
     if @user.save
       sign_in @user
@@ -54,8 +56,10 @@ class UsersController < ApplicationController
     # Before filters
 
     def signed_in_user
-      store_location
-      redirect_to signin_url, notice: "Please sign in." unless signed_in?
+      unless signed_in?
+        store_location
+        redirect_to signin_url, notice: "Please sign in."
+      end
     end
 
     def correct_user
